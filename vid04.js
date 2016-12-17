@@ -1,4 +1,4 @@
-// vid03.js
+// vid04.js
 'use strict';
 
 const {graphql, buildSchema} = require('graphql');
@@ -12,11 +12,26 @@ const schema = buildSchema(`
     }
     type Query {
         video: Video 
+        videos: [Video]
     }
     type Schema {
         query: Query
     }
 `);
+
+const videoA = {
+    id: 'a',
+    title: 'Create a GraphQl Schema',
+    duration: 120,
+    watched: true
+};
+const videoB = {
+    id: 'b',
+    title: 'Ember.js CLI',
+    duration: 240,
+    watched: false
+};
+const videos = [videoA, videoB];
 
 const resolvers = {
     video: () => ({
@@ -24,12 +39,13 @@ const resolvers = {
         title: 'bar',
         duration:  180,
         watched: true
-    })
+    }),
+    videos: () => videos
 };
 
 const query = `
     query myFirstQuery {
-        video {
+        videos {
             id
             title
             duration
@@ -43,7 +59,6 @@ graphql(schema, query, resolvers)
     .catch( (error) => {console.log(error)} )
 ;
 
-// call:        node vid03
-// returns:     { data: { video: { id: '1', title: 'bar', duration: 180, watched: true } } }
-
+// call:        node vid04
+// returns:     { data: { videos: [ [Object], [Object] ] } }
 

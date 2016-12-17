@@ -1,0 +1,11 @@
+{
+  "name": "graphql_server",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/z-bit/graphql_server.git",
+  "author": "z-bit <guenther@z-bit.co.uk>",
+  "license": "MIT",
+  "dependencies": {
+    "graphql": "^0.8.2"
+  }
+}
