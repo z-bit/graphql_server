@@ -6,6 +6,8 @@
   "author": "z-bit <guenther@z-bit.co.uk>",
   "license": "MIT",
   "dependencies": {
+    "express": "^4.14.0",
+    "express-graphql": "^0.6.1",
     "graphql": "^0.8.2"
   }
 }

@@ -9,5 +9,6 @@
 * yarn add graphql
 
 
-* next
+* yarn add express express-graphql
+
  
