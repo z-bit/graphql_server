@@ -13,7 +13,7 @@ const {
 } = require('graphql');
 const PORT = process.env.port || 3000;
 const server = express();
-const { getVideoById } = require('./data');
+const { getVideoById } = require('./src/data');
 
 const videoType = new GraphQLObjectType({
     name: 'Video',
