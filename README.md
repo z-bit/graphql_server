@@ -11,4 +11,6 @@
 
 * yarn add express express-graphql
 
+slight problems with vid12.js, commented on within
+
  
