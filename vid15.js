@@ -1,13 +1,14 @@
-// vid14.js <-> .src/node14.js
+// vid15.js <-> .src/node15.js
 'use strict';
 
-const { nodeInterface, nodeField } = require('./src/node14');
+const { nodeInterface, nodeField } = require('./src/node15');
 
 const {
     globalIdField,
     connectionDefinitions,
     connectionFromPromisedArray,
     connectionArgs,
+    mutationWithClientMutationId,
 } = require('graphql-relay');
 
 const express  = require('express');
@@ -83,9 +84,9 @@ const queryType = new GraphQLObjectType({
     }
 });
 
-const videoInputType = new GraphQLInputObjectType({
-    name: 'VideoInput',
-    fields: {
+const videoMutation = mutationWithClientMutationId({
+    name: 'AddVideo',
+    inputFields: {
         title: {
             type: new GraphQLNonNull(GraphQLString),
             description: 'The title of the video.'
@@ -97,25 +98,27 @@ const videoInputType = new GraphQLInputObjectType({
         released: {
             type: new GraphQLNonNull(GraphQLBoolean),
             description: 'Whether or not the video is released.'
-        }
+        },
     },
+    outputFields: {
+        video: {
+            type: videoType,
+        },
+    },
+    mutateAndGetPayload: (args) => new Promise((resolve, reject) => {
+        Promise
+            .resolve(createVideo(args))
+            .then( (video) => resolve({video}) )
+            .catch(reject)
+        ;
+    }),
 });
 
 const mutationType = new GraphQLObjectType({
     name: 'Mutation',
     description: 'The root mutation type.',
     fields: {
-        createVideo: {
-            type: videoType,
-            args: {
-               video: {
-                   type: new GraphQLNonNull(videoInputType)
-               },
-            },
-            resolve: (_, args) => {
-                return createVideo(args.video);
-            }
-        }
+        createVideo: videoMutation,
     }
 });
 
@@ -134,8 +137,40 @@ server.listen(PORT, () => {
 });
 
 /*
-call:        node vid14
+call:        node vid15
 returns:     Listening on http://localhost:3000
 
 open in browser with http://localhost:3000/graphql
+
+Query:
+======
+mutation AddVideoQuery($input: AddVideoInput!){
+    createVideo(input: $input){
+        video {
+            title
+        }
+    }
+ }
+
+Query Variables:
+================
+{
+    "input": {
+        "title": "Relay Video Title",
+        "duration": 300,
+        "released": false
+    }
+}
+
+GraphiQL Result (should be):
+============================
+{
+    "data": {
+        "createVideo": {
+            "video": {
+                "title": "Relay Video Title"
+            }
+        }
+    }
+}
 */
